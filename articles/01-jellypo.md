@@ -85,6 +85,7 @@ sub get_last_num {
 
 ### 순수 펄로 구현한 get\_last\_num
 해당 소스의 구동에 대해 제게 묻지 말아주세요. a3ro 님 코드인데 왜 저렇게 되는지 이해를 못하고 있습니다. 그냥 되니까 갖다 쓰는 중. ^^;;
+
 <pre class="brush: perl">
 sub get_last_num {
 my @a = glob("img_\*");
@@ -101,6 +102,7 @@ return ++$last;
 
 ### 순수 펄로 get_last_num 구현 방법 2 ...의 힌트
 기사 마감 이후 제보 받은 내용에 따르면 다음과 같이 opendir을 할 경우 glob 을 안 쓰기 때문에 빠르게 파일을 얻을 수 있다고 합니다. 디렉토리 내 파일 목록을 얻을 수 있긴 있네요. opendir과 readdir을 이용한 get_last_num 함수의 실제 구현은 차후에 ...언젠가...
+
 <pre class="brush: perl">
 my $some_dir = "./";
 
@@ -132,16 +134,17 @@ if unless 등으로 확장자를 하나씩 찾아줬습니다.
 
 
 img\_0000.jpg 저장한 이후에 아래 코드를 추가한 후
+
 <pre class="brush: perl">
 my $final\_name = file\_type\_check($file);
 rename $file, $final\_name;
 </pre>
 
 file\_type\_check 함수를 추가합니다.
+
 <pre class="brush: perl">
 #저장한 파일 타입(png, gif, bmp, jpg)를 확인해서 확장자 바꾼 파일명을 반환
 sub file_type_check {
-#   my $file = shift;
     my ($file) = @_;
     my $ext;
     my $ft = File::Type->new();
@@ -169,7 +172,6 @@ sub file_type_check {
     }
 }
 </pre>
-
 
 
 ### 이미지 링크 찾기 개선
@@ -747,7 +749,6 @@ sub download {
         binmode $fh;
         print $fh $mech->content;
         close $fh;
-#       sleep 1;
     }
 }
 </pre>

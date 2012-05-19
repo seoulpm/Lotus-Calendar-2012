@@ -1,8 +1,17 @@
-# 나의 Catalyst 답사기 II
+넷째날 : 나의 Catalyst 답사기 II
+================================
+
+글쓴이
+======
+
+@JEEN_LEE, 하니(?:님|놈)아빠, 킨들러리스트
+
+## 개요
 
 [2010 년 크리스마스 달력 기사 - 나의 Catalyst 답사기 II](http://advent.perl.kr/2010/2010-12-12.html) 에서 Catalyst 를 사용할 때 저는 이렇게 한다라고 끄적여 놓았던 적이 있습니다.
 
-오늘은 그 연장선상에서 얘기를 진행해볼까 합니다.
+오늘은 그 연장선상에서 얘기를 진행해볼까 합니다. 어디까지나 제가 사용할 때 주로 하는 일들에 대해서 입니다.
+
 
 ### [Catalyst::Plugin::Static::Simple](http://metacpan.org/module/Catalyst::Plugin::Static::Simple) 은 사용하지 않는다
 
@@ -12,6 +21,7 @@
 
 저같은 경우에는 [Plack::Middleware::Static](http://metacpan.org/module/Plack::Middleware::Static) 으로 PSGI 레이어에서 받아서 처리하도록 했습니다.
 
+<pre class="brush: perl">
     # app.psgi
     use MyApp;
     use Plack::Builder;
@@ -23,10 +33,13 @@
             root => MyApp->path_to('root/static');
         $app;
     };
+</pre>
 
-그러니까 이렇게 함으로 C::P::Static::Simple 을 사용하지 않을 수 있습니다. :-) 물론 이 이후로는 어플리케이션 서버 기동시에는
+그러니까 이렇게 함으로 `C::P::Static::Simple` 을 사용하지 않을 수 있습니다. :-) 물론 이 이후로는 어플리케이션 서버 기동시에는
 
+<pre class="brush: bash">
     $ plackup -Ilib [app.psgi]
+</pre>
 
 로 띄워야 제대로 정적파일들을 받아볼 수 있겠죠.
 
@@ -36,10 +49,12 @@
 
 이유가 있다면, 결정적으로 .pl 형식은 
 
+<pre class="brush: perl">
     {
         name => 'MyApp',
         envAA => $ENV{envAA} || 'envAA-Value',
     };
+</pre>
 
 이런식의 조건분기가 가능해집니다. 설정파일 자체에 코드가 난립하면 관리하기 힘들어질 수 있지만, 개발환경이 달라짐에 따라 바꿔줄 필요가 있는 다양한 설정항목들을 환경변수에서 정의하도록 하고 `myapp.pl` 은 매번 환경이 바뀔 때 마다 해당 설정항목을 일일이 바꿀 필요가 없이 다른 개발자들과 공유할 수 있습니다.
 
@@ -47,11 +62,13 @@
 
 또한 설정항목안에 다른 방대한 설정정보가 필요한 경우가 있다면
 
+<pre class="brush: perl">
     use YAML::XS;
     {
         ....,
         meta => YAML::XS::LoadFile('conf/meta.yaml'),
     };
+</pre>
 
 하나의 설정항목 안에 다시 다른파일을 읽어서 집어넣어서 쓰고 있기도 하구요.
 
@@ -59,6 +76,7 @@
 
 예를들어 `MyApp` 이라는 것을 만들었다면.. MyApp.pm 에서 아래와 같은 항목들을 발견하실 겁니다.
 
+<pre class="brush: perl">
     package MyApp;
     
     ....
@@ -68,9 +86,11 @@
         disable_component_resolution_regex_fallback => 1,
         enable_catalyst_header => 1, # Send X-Catalyst header
     );
+</pre>
 
 그리고 `Catalyst::View::TT` 를 사용해서 Default View 를 만든다면 또 `View/Default.pm` 파일에서는 또 아래와 같은 항목들이 있겠죠.
 
+<pre class="brush: perl">
     package MyApp::View::Default;
     use Moose;
     use namespace::autoclean;
@@ -81,11 +101,13 @@
         TEMPLATE_EXTENSION => '.tt',
         render_die => 1,
     );
+</pre>
 
 또 DB 접속을 위해서 Model 에 무엇인가를 만들었다면 `__PACKAGE__->config()` 에 무엇인가 쓰여져있거나 쓰고 있지는 않을까 생각합니다.
 
 위에서 .pl 형식을 사용한다고 했는데, 저의 경우는 일단 위의 모든 설정항목들을 기본 설정파일로 묶어냅니다.
 
+<pre class="brush: perl">
     {
         name => 'MyApp',
         disable_component_resolution_regex_fallback => 1,
@@ -107,6 +129,7 @@
             },
         },
     };
+</pre>
 
 이렇게 말이죠. 왜냐면 이게 편하잖아요 :-)
 
@@ -116,7 +139,9 @@ Catalyst App 을 생성하면 psgi 파일 명명규칙은 기본적으로 해당
 
 그러면 `plackup` 으로 기동시에 psgi 파일을 지정하지 않아도 됩니다;;; 기본적으로 `app.psgi` 파일이 있는지 확인하고 그걸 참조하도록 되어 있습니다.
 
+<pre class="brush: bash">
     $ plackup -Ilib
+</pre>
 
 만으로도 어플리케이션 서버가 뜨게 됩니다.
 
