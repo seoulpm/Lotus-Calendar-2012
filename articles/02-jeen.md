@@ -16,19 +16,6 @@
 
 기본적으로 Catalyst App 의 보틀넥은 TT2 라는 것이 일반적인 관념이라고 할까요.
 
-#### encode_body => 1
-
-Catalyst 는 한글을 비롯해서 시스템 상에 유니코드를 사용할 시에는 `Catalyst::Plugin::Unicode::Encoding` 을 사용하는 것을 권장하고 있습니다. Xslate 에서는 `C::P::Unicode::Encoding` 을 사용할 때에는 
-
-<pre class="brush: perl">
-    'View::Default' => {
-        ...,
-        'encode_body' => 1,
-    },
-</pre>
-
-위처럼 `encode_body` 값을 지정해 줄 필요가 있습니다.
-
 #### Cache?
 
 TT2 에서 템플릿 컴파일을 해놓은 파일을 이용해서 Cache 를 하고 있습니다.
