@@ -1,7 +1,7 @@
 첫째날 : 펄을 이용한 그림 파일 긁어오기.
 ===========================================
 
-글쓴이 : JellyPo
+글쓴이 : @JellyPooo, 
 
 ## 개요
 이 글에서 다루는 기술적 수준은 eeyees 님의 2010년 12월 6일 기사 '[나만의 E-Book으로 따뜻한 크리스마스를!](http://advent.perl.kr/2010/2010-12-06.html)'(이하 나만의 이북) 에서 다룬 내용입니다. 개별 사이트에 적용하면서 제 필요에 맞게 개선했습니다.
@@ -101,7 +101,9 @@ return ++$last;
 다양한 시스템에서 실행될 수 있게 하려면 순수 펄로 구현된 코드를 사용하는게 좋겠죠?
 
 ### 순수 펄로 get_last_num 구현 방법 2 ...의 힌트
-기사 마감 이후 제보 받은 내용에 따르면 다음과 같이 opendir을 할 경우 glob 을 안 쓰기 때문에 빠르게 파일을 얻을 수 있다고 합니다. 디렉토리 내 파일 목록을 얻을 수 있긴 있네요. opendir과 readdir을 이용한 get_last_num 함수의 실제 구현은 차후에 ...언젠가...
+기사 마감 이후 pung96 님 께서 알려주신 바에 따르면 다음과 같이 opendir을 할 경우 glob 을 안 쓰기 때문에 빠르게 파일을 얻을 수 있다고 합니다. 
+
+glob을 쓰지 않기 때문에 실행 시간이 짧습니다. opendir과 readdir을 이용한 get_last_num 함수의 실제 구현은 차후에 ...언젠가...
 
 <pre class="brush: perl">
 my $some_dir = "./";
@@ -136,8 +138,8 @@ if unless 등으로 확장자를 하나씩 찾아줬습니다.
 img\_0000.jpg 저장한 이후에 아래 코드를 추가한 후
 
 <pre class="brush: perl">
-my $final\_name = file\_type\_check($file);
-rename $file, $final\_name;
+my $final_name = file_type_check($file);
+rename $file, $final_name;
 </pre>
 
 file\_type\_check 함수를 추가합니다.
@@ -188,12 +190,12 @@ sub file_type_check {
 
 그림 파일 첨부된 게시물의 html tag
 <pre>
-    &lt;td align=left style="word-break:break-all;"&gt;&nbsp;  &lt;img src='http://wstatic.dcinside.com/gallery/skin/skin\_new/img\_icon.jpg' /&gt;      &lt;a href="/list.php?id=bicycle&no=771868&page=1&bbs="   &gt;[더질]이거 왜이러는지 아시는분 서군횽 및 지게미유저 소환!!&lt;/a&gt; &lt;/span&gt;&lt;font style=font-family:tahoma;font-size:7pt&gt;&lt;a href="/list.php?id=bicycle&no=771868&page=1&view\_comment=1" &gt;&lt;/a&gt; &lt;/font&gt; &lt;/td&gt;
+    &lt;td align=left style="word-break:break-all;"&gt;&nbsp;  &lt;img src='http://wstatic.dcinside.com/gallery/skin/skin_new/img_icon.jpg' /&gt;      &lt;a href="/list.php?id=bicycle&no=771868&page=1&bbs="   &gt;[더질]이거 왜이러는지 아시는분 서군횽 및 지게미유저 소환!!&lt;/a&gt; &lt;/span&gt;&lt;font style=font-family:tahoma;font-size:7pt&gt;&lt;a href="/list.php?id=bicycle&no=771868&page=1&view_comment=1" &gt;&lt;/a&gt; &lt;/font&gt; &lt;/td&gt;
 </pre>
 
 그림 파일 없는 게시물의 html tag
 <pre>
-    &lt;td align=left style="word-break:break-all;"&gt;&nbsp;  &lt;img src='http://wstatic.dcinside.com/gallery/skin/skin\_new/new\_head.gif' /&gt;      &lt;a href="/list.php?id=bicycle&no=771864&page=1&bbs="   &gt;횽들 타이어 세척은 주로 뭘로 하시나요~?&lt;/a&gt; &lt;/span&gt;&lt;font style=font-family:tahoma;font-size:7pt&gt;&lt;a href="/list.php?id=bicycle&no=771864&page=1&view\_comment=1" &gt;[1]&lt;/a&gt; &lt;/font&gt; &lt;/td&gt;
+    &lt;td align=left style="word-break:break-all;"&gt;&nbsp;  &lt;img src='http://wstatic.dcinside.com/gallery/skin/skin_new/new_head.gif' /&gt;      &lt;a href="/list.php?id=bicycle&no=771864&page=1&bbs="   &gt;횽들 타이어 세척은 주로 뭘로 하시나요~?&lt;/a&gt; &lt;/span&gt;&lt;font style=font-family:tahoma;font-size:7pt&gt;&lt;a href="/list.php?id=bicycle&no=771864&page=1&view_comment=1" &gt;[1]&lt;/a&gt; &lt;/font&gt; &lt;/td&gt;
 </pre>
 그림 파일이 있는 게시물 링크만 얻을 수 있으면 빠른 그림 긁어오기가 될 것 같습니다. 정규표현식 한 번에 가능할 것 같네요. 아래 소스를 봐주세요.
 
@@ -223,12 +225,12 @@ img\_icon.jpg가 있는 줄만 매치 시키면서, 게시물 링크인 .\*bbs= 
 정규표현식을 처음 접하시는 분은 어려운 내용일 수 있습니다.
 
 <pre class="brush: perl">
-sub get\_image\_links {
-    my ($url) = @\_;
+sub get_image_links {
+    my ($url) = @_;
     my @links;
     $mech->get($url);
     my $response = $mech->content;
-    my @urls = $response =~ m/img\_icon\.jpg.\*&lt;a href=\"(.\*bbs=)\"/g;
+    my @urls = $response =~ m/img_icon\.jpg.*&lt;a href=\"(.*bbs=)\"/g;
 
     foreach my $link ( @urls ) {
         $link = 'http://gall.dcinside.com' . "$link";
@@ -236,7 +238,7 @@ sub get\_image\_links {
         push @links, $link;
     }
 
-    return \@links;
+    return @links;
 }
 </pre>
 
@@ -700,7 +702,8 @@ sub download {
 마감이 촉박하니 그냥 공개합니다.
 하드코딩으로 숫자 바꿔서 실행하시면 되겠습니다.
 
-    foreach my $page\_num ( 1 .. 585 ) { ... }
+    foreach my $page_num ( 1 .. 585 ) { ... }
+
 이렇게 바꾸시면 1화부터 585화까지 받게 됩니다.
 도중에 링크 주소가 없으면 중단됩니다.
 
@@ -762,4 +765,8 @@ perl 코딩보단 사이트 분석하는데 시간이 더 많이 들었습니다
 
 이렇게 모은 파일을 perl 프레임워크를 이용해 실시간으로 공개하면 재미있는 짤방 사이트를 만들 수 있을거 같네요.
 
+
 관세음보살
+
+## 참고문서
+[나만의 E-Book으로 따뜻한 크리스마스를](http://advent.perl.kr/2010/2010-12-06.html) by eeyees
